@@ -1,2 +1,5 @@
 Django
 psycopg2-binary
+djangorestframework
+markdown
+django-filter

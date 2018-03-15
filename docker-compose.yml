@@ -8,6 +8,7 @@ services:
   web:
     build: ./django
     command: python3 manage.py runserver 0.0.0.0:8000
+    restart: always
     volumes:
       - ./django:/code
     ports:
