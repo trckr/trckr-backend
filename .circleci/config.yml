@@ -5,7 +5,7 @@
 version: 2
 jobs:
   build:
-    machine:
+    docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.6.1
@@ -43,6 +43,10 @@ jobs:
       - run:
           name: Start application
           command: docker-compose -f production.yml up -d
+
+      - run:
+          name: Test sleep to wait for postgres
+          command: sleep 10
 
       - run:
           name: Run migrations
