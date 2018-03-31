@@ -72,5 +72,4 @@ jobs:
 
       - run:
           name: Deploy to production server
-          command: echo "todo"
-          
+          command: ssh centos@trvlr.ch "cd ~/trckr/trckr_backend/ && git pull && docker-compose -f production.yml up -d --build"

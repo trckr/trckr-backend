@@ -8,10 +8,10 @@ services:
       - ./db-data:/var/lib/postgresql/data
   web:
     build: ./django
-    # command: python3 manage.py runserver 0.0.0.0:8000
+    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
     restart: always
     ports:
-      - "8000:80"
+      - "8000:8000"
     depends_on:
       - db
 
