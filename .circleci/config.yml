@@ -52,7 +52,9 @@ jobs:
       # https://nose.readthedocs.io
       - run:
           name: Run tests
-          command: docker-compose -f production.yml run web python manage.py test
+          command: |
+              docker-compose -f production.yml up -d
+              docker-compose -f production.yml run web python manage.py test
 
       - store_artifacts:
           path: test-reports
