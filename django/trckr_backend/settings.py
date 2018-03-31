@@ -25,7 +25,7 @@ SECRET_KEY = '+&_61z^3m(83-+-n+#y3#$kfc$oblbmm6+@v2^8od-vt0!575f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'trckr.trvlr.ch', '0.0.0.0', '127.0.0.1']
 
 
 # Application definition
