@@ -1,14 +1,7 @@
 #!/bin/bash
 
-set -e
+# Quickfix to wait for postgres
+sleep 5
 
-cmd="$@"
-
-while ! curl --silent --output /dev/null  --head --fail db:5432; do
-  >&2 echo "Postgres is unavailable - sleeping"
-  sleep 1
-done
-
->&2 echo "Postgres is up - executing command"
-exec $cmd
-
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
