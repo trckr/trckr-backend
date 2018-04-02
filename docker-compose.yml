@@ -7,7 +7,7 @@ services:
       - ./db-data:/var/lib/postgresql/data
   web:
     build: ./django
-    # command: python3 manage.py runserver 0.0.0.0:8000
+    command: ./startup.sh
     restart: always
     volumes:
       - ./django:/code

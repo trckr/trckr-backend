@@ -3,4 +3,5 @@ psycopg2-binary
 djangorestframework
 markdown
 django-filter
+django-cors-headers
 djangorestframework-jwt
