@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,6 +13,8 @@ class UserCreate(APIView):
     """
     Creates a new user and returns the auth token on success
     """
+    permission_classes = (AllowAny, )
+
     def post(self, request, format='json'):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
