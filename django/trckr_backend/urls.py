@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/ping/', include('ping.urls')),
     path('api/auth/', include('rest_framework.urls')),
     path('api/token-auth/', obtain_jwt_token),
+    path('api/user/', include('accounts.urls')),
 ]
