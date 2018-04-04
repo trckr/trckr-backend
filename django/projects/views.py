@@ -8,4 +8,3 @@ from .serializers import ProjectSerializer
 class ProjectView(ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-

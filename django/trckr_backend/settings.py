@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'projects.apps.ProjectsConfig',
     'ping.apps.PingConfig',
+    'accounts.apps.AccountsConfig',
+    'tasks.apps.TasksConfig'
 ]
 
 MIDDLEWARE = [
