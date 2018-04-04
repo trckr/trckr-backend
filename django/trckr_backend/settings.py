@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'projects.apps.ProjectsConfig',
     'ping.apps.PingConfig',
 ]
 
