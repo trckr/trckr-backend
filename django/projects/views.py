@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.generics import ListCreateAPIView
+
+from .models import Project
+from .serializers import ProjectSerializer
 
 
-class ProjectView(APIView):
+class ProjectView(ListCreateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
-    def get(self, request, format=None):
-        pass

@@ -7,5 +7,5 @@ class Project(models.Model):
     description = models.TextField(blank=True, default="")
     
     createdBy = models.ForeignKey(User, on_delete=models.PROTECT)
-    createDate = models.DateTimeField(auto_now_add=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
     modifiedDate = models.DateTimeField(auto_now=True)
