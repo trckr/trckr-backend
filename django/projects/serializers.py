@@ -5,6 +5,10 @@ from .models import Project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    createdBy = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Project
-        fields = ('name', 'description', 'modifiedDate', 'createdDate')
+        fields = ('id', 'name', 'description', 'modifiedDate', 'createdDate', 'createdBy')
+        read_only_fields = ('createdBy',)
