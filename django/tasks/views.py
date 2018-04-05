@@ -10,18 +10,8 @@ from .serializers import TaskSerializer
 
 class TaskView(APIView):
     """
-    Let's users create and query tasks for a project
+    Let's users create new tasks
     """
-    def get_object(self, pk):
-        try:
-            return Task.objects.get(pk=pk)
-        except Task.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        task = self.get_object(pk)
-        serializer = TaskSerializer(task)
-        return Response(serializer.data)
 
     def post(self, request, format='json'):
         serializer = TaskSerializer(data=request.data)
@@ -32,6 +22,22 @@ class TaskView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TaskDetailView(APIView):
+    """
+    Let's users query and update tasks
+    """
+
+    def get_object(self, pk):
+        try:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
 
     def put(self, request, pk, format='json'):
         task = self.get_object(pk)
