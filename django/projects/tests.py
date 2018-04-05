@@ -53,12 +53,12 @@ class TaskProjectTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_tasks_for_nonexisting_project(self):
-        response = self.client.get("/api/project/0/tasks")
+        response = self.client.get("/api/projects/0/tasks")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_tasks_for_project(self):
         response = self.client.get(
-                "/api/project/" + str(self.test_project.id) + "/tasks"
+                "/api/projects/" + str(self.test_project.id) + "/tasks"
                 )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
