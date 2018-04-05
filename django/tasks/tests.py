@@ -41,7 +41,7 @@ class TasksTest(APITestCase):
         """
         data = {
             'name': 'test',
-            'description': 'test@example.com',
+            'description': 'test description',
             'project' : self.test_project.id,
         }
 
@@ -52,6 +52,90 @@ class TasksTest(APITestCase):
 
         task = Task.objects.latest('id')
 
+        self.assertEqual(response.data['name'], data['name'])
+        self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(response.data['project'], data['project'])
+
+    def test_create_task_without_name(self):
+        """
+        Cannot create a task without a name
+        """
+        data = {
+            'name': '',
+            'description': 'test@example.com',
+            'project' : self.test_project.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 0)
+
+    def test_update_task(self):
+        """
+        Updates a task
+        """
+        data = {
+            'name': 'test',
+            'description': 'test description',
+            'project' : self.test_project.id,
+        }
+
+        self.client.post(self.api_url, data, format='json')
+
+        data['description'] = 'updated description'
+
+        response = self.client.put(
+                self.api_url + str(Task.objects.latest('id').id),
+                data,
+                format='json'
+                )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.count(), 1)
+
+        task = Task.objects.latest('id')
+
+        self.assertEqual(response.data['name'], data['name'])
+        self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(response.data['project'], data['project'])
+
+    def test_update_task_with_no_name(self):
+        """
+        Updates a task
+        """
+        data = {
+            'name': 'test',
+            'description': 'test description',
+            'project' : self.test_project.id,
+        }
+
+        self.client.post(self.api_url, data, format='json')
+
+        data['name'] = ''
+
+        response = self.client.put(
+                self.api_url + str(Task.objects.latest('id').id),
+                data,
+                format='json'
+                )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_nonexisting_task(self):
+        response = self.client.get(self.api_url + "1")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_task_after_creation(self):
+        data = {
+            'name': 'test',
+            'description': 'test description',
+            'project' : self.test_project.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+        response = self.client.get(self.api_url + str(response.data['id']))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], data['name'])
         self.assertEqual(response.data['description'], data['description'])
         self.assertEqual(response.data['project'], data['project'])
