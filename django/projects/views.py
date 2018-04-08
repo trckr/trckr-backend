@@ -24,6 +24,7 @@ class TaskProjectView(APIView):
     """
     Let's users query tasks for a specific project
     """
+
     def get_object(self, pk):
         try:
             return Project.objects.get(pk=pk)
