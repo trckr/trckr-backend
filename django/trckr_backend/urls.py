@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/user/', include('accounts.urls')),
     path('api/projects/', include('projects.urls')),
     path('api/tasks/', include('tasks.urls')),
+    path('api/time-entries/', include('time_entries.urls')),
 ]

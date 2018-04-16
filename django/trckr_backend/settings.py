@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'ping.apps.PingConfig',
     'accounts.apps.AccountsConfig',
-    'tasks.apps.TasksConfig'
+    'tasks.apps.TasksConfig',
+    'time_entries.apps.TimeEntriesConfig'
 ]
 
 MIDDLEWARE = [
