@@ -23,6 +23,11 @@ class TimeEntryView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, format=None):
+        time_entries = TimeEntry.objects.filter(createdBy=request.user)
+        serializer = TimeEntrySerializer(time_entries, many=True)
+        return Response(serializer.data)
+
 class TimeEntryDetailView(APIView):
     """
     Let's users query and update time entries

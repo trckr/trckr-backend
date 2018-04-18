@@ -126,3 +126,20 @@ class TimeEntryTest(APITestCase):
         self.assertEqual(Decimal(response.data['timeSpent']),
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
+
+    def test_get_own_time_entries(self):
+        data = {
+            'description': 'test description',
+            'timeSpent' : 1.25,
+            'task' : self.test_task.id,
+        }
+        response = self.client.post(self.api_url, data, format='json')
+        response = self.client.get(self.api_url)
+
+        self.assertEqual(TimeEntry.objects.count(), 1)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['description'], data['description'])
+        self.assertEqual(Decimal(response.data[0]['timeSpent']),
+                         Decimal(data['timeSpent']))
+        self.assertEqual(response.data[0]['task'], data['task'])
