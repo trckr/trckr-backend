@@ -26,7 +26,7 @@ SECRET_KEY = '+&_61z^3m(83-+-n+#y3#$kfc$oblbmm6+@v2^8od-vt0!575f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'trck-api.trvlr.ch', 'trckr.trvlr.ch', 'trckr-api.trvlr.ch', '0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', 'trckr.trvlr.ch', 'trckr-api.trvlr.ch', '0.0.0.0', '127.0.0.1']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'token_auth.apps.TokenAuthConfig',
     'projects.apps.ProjectsConfig',
     'ping.apps.PingConfig',
     'accounts.apps.AccountsConfig',
@@ -137,16 +138,13 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication'
     ]
 
 }
 
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365)
-}
 
 # It might be useful to consider CORS_ORIGIN_WHITELIST for the future
 CORS_ORIGIN_ALLOW_ALL = True

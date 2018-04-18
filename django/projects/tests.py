@@ -3,7 +3,6 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
-from rest_framework_jwt import utils
 from tasks.models import Task
 
 from .models import Project
@@ -21,9 +20,7 @@ class ProjectTest(APITestCase):
             createdBy=self.test_user)
 
         # Authorize API calls with token
-        payload = utils.jwt_payload_handler(self.test_user)
-        token = utils.jwt_encode_handler(payload)
-        auth = 'JWT {0}'.format(token)
+        auth = 'Token {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_projects(self):
@@ -59,9 +56,7 @@ class ProjectDetailTest(APITestCase):
         self.test_token = Token.objects.create(user=self.test_user)
 
         # Authorize API calls with token
-        payload = utils.jwt_payload_handler(self.test_user)
-        token = utils.jwt_encode_handler(payload)
-        auth = 'JWT {0}'.format(token)
+        auth = 'Token {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_project(self):
@@ -139,9 +134,7 @@ class TaskProjectTest(APITestCase):
                 createdBy=self.test_user))
 
         # Authorize API calls with token
-        payload = utils.jwt_payload_handler(self.test_user)
-        token = utils.jwt_encode_handler(payload)
-        auth = 'JWT {0}'.format(token)
+        auth = 'Token  {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_tasks_for_nonexisting_project(self):

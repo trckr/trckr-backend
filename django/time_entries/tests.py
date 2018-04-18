@@ -38,9 +38,7 @@ class TimeEntryTest(APITestCase):
                 )
 
         # Authorize API calls with token
-        payload = utils.jwt_payload_handler(self.test_user)
-        token = utils.jwt_encode_handler(payload)
-        auth = 'JWT {0}'.format(token)
+        auth = 'Token {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_create_time_entry(self):
