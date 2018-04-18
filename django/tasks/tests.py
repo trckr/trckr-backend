@@ -187,9 +187,7 @@ class TaskTimeEntryTest(APITestCase):
                 createdBy=self.test_user))
 
         # Authorize API calls with token
-        payload = utils.jwt_payload_handler(self.test_user)
-        token = utils.jwt_encode_handler(payload)
-        auth = 'JWT {0}'.format(token)
+        auth = 'Token {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_time_entries_for_nonexisting_task(self):
