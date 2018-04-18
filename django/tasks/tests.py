@@ -5,7 +5,6 @@ from projects.models import Project
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
-from rest_framework_jwt import utils
 from time_entries.models import TimeEntry
 
 from .models import Task
