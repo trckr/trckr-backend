@@ -11,10 +11,11 @@ class InvalidateAuthToken(APIView):
     """
 
     def post(self, request):
-        user_tokens = Token.objects.filter(user__id=request.user.id)
+        token_key = request.auth.key
 
-        if user_tokens.count() > 0:
-            user_tokens.delete()
+        try:
+            user_token = Token.objects.get(user=request.user, key=token_key)
+            user_token.delete()
             return Response("success", status=status.HTTP_200_OK)
-
-        return Response("token not found", status=status.HTTP_404_NOT_FOUND)
+        except Token.DoesNotExist:
+            return Response("token not found", status=status.HTTP_404_NOT_FOUND)

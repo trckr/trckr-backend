@@ -25,6 +25,13 @@ class InvalidateAuthTokenTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(user_token_exists)
 
+    def test_invalidate_existing_token_twice(self):
+        first_response = self.client.post(self.api_url)
+        second_response = self.client.post(self.api_url)
+
+        self.assertEqual(first_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(second_response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_invalidate_without_token(self):
         Token.objects.filter(user=self.test_user).delete()
         response = self.client.post(self.api_url)
