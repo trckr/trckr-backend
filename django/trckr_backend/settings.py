@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'trckr.trvlr.ch', 'trckr-api.trvlr.ch', '0.0.0.0', '127.0.0.1']
 
+APPEND_SLASH = True
 
 # Application definition
 
