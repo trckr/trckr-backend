@@ -63,6 +63,6 @@ class TaskTimeEntryView(APIView):
 
     def get(self, request, pk, format=None):
         task = self.get_object(pk)
-        time_entries = TimeEntry.objects.filter(task=task)
+        time_entries = TimeEntry.objects.filter(task=task, createdBy=request.user)
         serializer = TimeEntrySerializer(time_entries, many=True)
         return Response(serializer.data)
