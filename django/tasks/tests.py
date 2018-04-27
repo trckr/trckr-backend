@@ -85,7 +85,7 @@ class TasksTest(APITestCase):
         data['description'] = 'updated description'
 
         response = self.client.put(
-                self.api_url + str(Task.objects.latest('id').id),
+                self.api_url + str(Task.objects.latest('id').id) + '/',
                 data,
                 format='json'
                 )
@@ -114,14 +114,14 @@ class TasksTest(APITestCase):
         data['name'] = ''
 
         response = self.client.put(
-                self.api_url + str(Task.objects.latest('id').id),
+                self.api_url + str(Task.objects.latest('id').id) + '/',
                 data,
                 format='json'
                 )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_nonexisting_task(self):
-        response = self.client.get(self.api_url + "1")
+        response = self.client.get(self.api_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_task_after_creation(self):
@@ -132,7 +132,7 @@ class TasksTest(APITestCase):
         }
 
         response = self.client.post(self.api_url, data, format='json')
-        response = self.client.get(self.api_url + str(response.data['id']))
+        response = self.client.get(self.api_url + str(response.data['id']) + '/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], data['name'])
@@ -191,12 +191,12 @@ class TaskTimeEntryTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_time_entries_for_nonexisting_task(self):
-        response = self.client.get("/api/tasks/0/time-entries")
+        response = self.client.get("/api/tasks/0/time-entries/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_tasks_for_project(self):
         response = self.client.get("/api/tasks/" + str(self.test_task.id)
-                                   + "/time-entries")
+                                   + "/time-entries/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), len(self.test_time_entries))

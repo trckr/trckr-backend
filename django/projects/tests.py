@@ -102,7 +102,6 @@ class ProjectDetailTest(APITestCase):
 
 class TaskProjectTest(APITestCase):
     def setUp(self):
-        # TODO: find out how to use reverse with
         # params in the url
         # self.api_url = reverse('project-tasks')
         self.test_user = User.objects.create_user('test', 'test@example.com',
@@ -138,12 +137,12 @@ class TaskProjectTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_tasks_for_nonexisting_project(self):
-        response = self.client.get("/api/projects/0/tasks")
+        response = self.client.get("/api/projects/0/tasks/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_tasks_for_project(self):
         response = self.client.get("/api/projects/" + str(self.test_project.id)
-                                   + "/tasks")
+                                   + "/tasks/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), len(self.test_tasks))

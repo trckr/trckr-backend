@@ -93,7 +93,7 @@ class TimeEntryTest(APITestCase):
         data['description'] = 'updated description'
 
         response = self.client.put(
-                self.api_url + str(TimeEntry.objects.latest('id').id),
+                self.api_url + str(TimeEntry.objects.latest('id').id) + '/',
                 data,
                 format='json'
                 )
@@ -107,7 +107,7 @@ class TimeEntryTest(APITestCase):
         self.assertEqual(response.data['task'], data['task'])
 
     def test_get_nonexisting_time_entry(self):
-        response = self.client.get(self.api_url + "1")
+        response = self.client.get(self.api_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_time_entry_after_creation(self):
@@ -118,7 +118,7 @@ class TimeEntryTest(APITestCase):
         }
 
         response = self.client.post(self.api_url, data, format='json')
-        response = self.client.get(self.api_url + str(response.data['id']))
+        response = self.client.get(self.api_url + str(response.data['id']) + '/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['description'], data['description'])
