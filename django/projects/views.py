@@ -14,6 +14,11 @@ class ProjectView(ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+    def list(self, request, *args, **kwargs):
+        queryset = Project.objects.filter(createdBy=request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class ProjectDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
@@ -33,6 +38,6 @@ class TaskProjectView(APIView):
 
     def get(self, request, pk, format=None):
         project = self.get_object(pk)
-        tasks = Task.objects.filter(project=project)
+        tasks = Task.objects.filter(project=project, createdBy=request.user)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
