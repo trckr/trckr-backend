@@ -6,6 +6,7 @@ from tasks.models import Task
 
 class TimeEntry(models.Model):
     description = models.TextField(blank=True, default="")
+    startTime = models.DateTimeField()
     timeSpent = models.DecimalField(
             max_digits=10,
             decimal_places=5,

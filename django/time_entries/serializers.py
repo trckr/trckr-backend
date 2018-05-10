@@ -14,6 +14,7 @@ class TimeEntrySerializer(serializers.ModelSerializer):
         model = TimeEntry
         fields = ('id',
                   'description',
+                  'startTime',
                   'timeSpent',
                   'task',
                   'project')

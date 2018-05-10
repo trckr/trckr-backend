@@ -1,3 +1,4 @@
+from dateutil import parser
 from decimal import *
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -8,7 +9,6 @@ from rest_framework.test import APITestCase, APIClient
 from time_entries.models import TimeEntry
 
 from .models import Task
-
 
 class TasksTest(APITestCase):
     def setUp(self):
@@ -171,18 +171,21 @@ class TaskTimeEntryTest(APITestCase):
             TimeEntry.objects.create(
                 timeSpent=5,
                 description='Description 1',
+                startTime='2018-01-01 12:00',
                 task=self.test_task,
                 createdBy=self.test_user))
         self.test_time_entries.append(
             TimeEntry.objects.create(
                 timeSpent=10,
                 description='Description 2',
+                startTime='2018-02-01 12:00',
                 task=self.test_task,
                 createdBy=self.test_user))
         self.test_time_entries.append(
             TimeEntry.objects.create(
                 timeSpent=2,
                 description='Description 3',
+                startTime='2018-03-01 12:00',
                 task=self.test_task,
                 createdBy=self.test_user))
 
@@ -208,5 +211,7 @@ class TaskTimeEntryTest(APITestCase):
                              Decimal(self.test_time_entries[i].timeSpent))
             self.assertEqual(response.data[i]['description'],
                              self.test_time_entries[i].description)
+            self.assertEqual(parser.parse(response.data[i]['startTime']),
+                             parser.parse(self.test_time_entries[i].startTime))
             self.assertEqual(response.data[i]['task'],
                              self.test_time_entries[i].task.id)

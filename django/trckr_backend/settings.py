@@ -126,7 +126,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False # We don't care about time zones for now
 
 
 # Static files (CSS, JavaScript, Images)

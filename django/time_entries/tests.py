@@ -1,3 +1,4 @@
+from dateutil import parser
 from decimal import *
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -9,9 +10,10 @@ from rest_framework.test import APITestCase, APIClient
 
 from .models import TimeEntry
 
-
 class TimeEntryTest(APITestCase):
+
     def setUp(self):
+
         self.api_url = reverse('time_entries')
         self.test_user = User.objects.create_user(
                 'test',
@@ -43,6 +45,7 @@ class TimeEntryTest(APITestCase):
     def test_create_time_entry(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : 1.25,
             'task' : self.test_task.id,
         }
@@ -53,6 +56,8 @@ class TimeEntryTest(APITestCase):
         self.assertEqual(TimeEntry.objects.count(), 1)
 
         self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(parser.parse(response.data['startTime']),
+                         parser.parse(data['startTime']))
         self.assertEqual(Decimal(response.data['timeSpent']),
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
@@ -60,6 +65,7 @@ class TimeEntryTest(APITestCase):
     def test_create_time_entry_with_zero_time(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : 0,
             'task' : self.test_task.id,
         }
@@ -72,6 +78,7 @@ class TimeEntryTest(APITestCase):
     def test_create_time_entry_with_negative_time(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : -5,
             'task' : self.test_task.id,
         }
@@ -84,6 +91,7 @@ class TimeEntryTest(APITestCase):
     def test_update_time_entry(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : 1.25,
             'task' : self.test_task.id,
         }
@@ -91,6 +99,7 @@ class TimeEntryTest(APITestCase):
         self.client.post(self.api_url, data, format='json')
 
         data['description'] = 'updated description'
+        data['startTime'] = '2018-01-01 12:00'
 
         response = self.client.put(
                 self.api_url + str(TimeEntry.objects.latest('id').id) + '/',
@@ -102,6 +111,8 @@ class TimeEntryTest(APITestCase):
         self.assertEqual(TimeEntry.objects.count(), 1)
 
         self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(parser.parse(response.data['startTime']),
+                         parser.parse(data['startTime']))
         self.assertEqual(Decimal(response.data['timeSpent']),
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
@@ -113,6 +124,7 @@ class TimeEntryTest(APITestCase):
     def test_get_time_entry_after_creation(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : 1.25,
             'task' : self.test_task.id,
         }
@@ -122,6 +134,8 @@ class TimeEntryTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(parser.parse(response.data['startTime']),
+                         parser.parse(data['startTime']))
         self.assertEqual(Decimal(response.data['timeSpent']),
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
@@ -129,6 +143,7 @@ class TimeEntryTest(APITestCase):
     def test_get_own_time_entries(self):
         data = {
             'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
             'timeSpent' : 1.25,
             'task' : self.test_task.id,
         }
@@ -139,6 +154,8 @@ class TimeEntryTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['description'], data['description'])
+        self.assertEqual(parser.parse(response.data[0]['startTime']),
+                         parser.parse(data['startTime']))
         self.assertEqual(Decimal(response.data[0]['timeSpent']),
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data[0]['task'], data['task'])
