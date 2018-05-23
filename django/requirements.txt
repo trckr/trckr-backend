@@ -5,3 +5,6 @@ markdown
 django-filter
 django-cors-headers
 python-dateutil
+coverage
+django-nose
+nose

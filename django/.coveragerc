@@ -1,0 +1,17 @@
+[run]
+omit =
+    ../*migrations*
+    ../*apps.py
+    ../*models.py
+    ../*admin.py
+    ../*urls.py
+    ../*__init__.py
+
+[report]
+omit =
+    ../*migrations*
+    ../*apps.py
+    ../*models.py
+    ../*admin.py
+    ../*urls.py
+    ../*__init__.py

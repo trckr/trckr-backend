@@ -47,6 +47,13 @@ class ProjectTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_project_with__empty_name(self):
+        data = {'description': 'test description'}
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class ProjectDetailTest(APITestCase):
     def setUp(self):
@@ -87,6 +94,18 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(project_after_update.name, data['name'])
 
+    def test_update_project_with_empty_name(self):
+        data = {'name': '', }
+
+        test_project = Project.objects.create(
+            name='test project',
+            description='This is a test project',
+            createdBy=self.test_user)
+
+        response = self.client.put(
+            self.api_url + '{}/'.format(test_project.id), data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_delete_project(self):
         test_project = Project.objects.create(
             name='test project',
@@ -98,6 +117,12 @@ class ProjectDetailTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(Project.objects.filter(pk=test_project.id)), 0)
+
+    def test_delete_non_existing_project(self):
+        response = self.client.delete(
+            self.api_url + '{}/'.format(0), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class TaskProjectTest(APITestCase):

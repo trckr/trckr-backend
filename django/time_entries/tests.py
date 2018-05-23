@@ -62,6 +62,23 @@ class TimeEntryTest(APITestCase):
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
 
+    def test_create_time_entry_without_start_time(self):
+        data = {
+            'description': 'test description',
+            'timeSpent' : 1.25,
+            'task' : self.test_task.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(TimeEntry.objects.count(), 1)
+
+        self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(Decimal(response.data['timeSpent']),
+                         Decimal(data['timeSpent']))
+        self.assertEqual(response.data['task'], data['task'])
+
     def test_create_time_entry_with_zero_time(self):
         data = {
             'description': 'test description',
@@ -81,6 +98,44 @@ class TimeEntryTest(APITestCase):
             'startTime' : '2018-01-01 12:00',
             'timeSpent' : -5,
             'task' : self.test_task.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(TimeEntry.objects.count(), 0)
+
+    def test_create_time_entry_with_negative_time(self):
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : -5,
+            'task' : self.test_task.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(TimeEntry.objects.count(), 0)
+
+    def test_create_time_entry_with_no_task(self):
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : 1
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(TimeEntry.objects.count(), 0)
+
+    def test_create_time_entry_with_for_non_existing_task(self):
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : 1,
+            'task' : 0
         }
 
         response = self.client.post(self.api_url, data, format='json')

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -149,3 +150,13 @@ REST_FRAMEWORK = {
 
 # It might be useful to consider CORS_ORIGIN_WHITELIST for the future
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=token_auth,projects,ping,accounts,tasks,time_entries',
+]

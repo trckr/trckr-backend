@@ -20,13 +20,13 @@ class TasksTest(APITestCase):
                 )
         self.test_token = Token.objects.create(user=self.test_user)
         self.test_project = Project.objects.create(
-                name='Test project',
+                name='Test project 1',
                 description='This is a test project',
                 createdBy = self.test_user
                 )
-        self.test_project = Project.objects.create(
-                name='Test project',
-                description='This is a test project',
+        self.test_project_2 = Project.objects.create(
+                name='Test project 2',
+                description='This is also a test project',
                 createdBy = self.test_user
                 )
 
@@ -56,6 +56,20 @@ class TasksTest(APITestCase):
         self.assertEqual(response.data['project'], data['project'])
 
     def test_create_task_without_name(self):
+        """
+        Cannot create a task without a name
+        """
+        data = {
+            'description': 'test@example.com',
+            'project' : self.test_project.id,
+        }
+
+        response = self.client.post(self.api_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 0)
+
+    def test_create_task_with_empty_name(self):
         """
         Cannot create a task without a name
         """
@@ -138,6 +152,32 @@ class TasksTest(APITestCase):
         self.assertEqual(response.data['name'], data['name'])
         self.assertEqual(response.data['description'], data['description'])
         self.assertEqual(response.data['project'], data['project'])
+
+    def test_get_tasks_after_creation(self):
+        data = [{
+            'name': 'test 1',
+            'description': 'test description 1',
+            'project' : self.test_project.id,
+        }, {
+            'name': 'test 2',
+            'description': 'test description 2',
+            'project' : self.test_project_2.id,
+        }]
+
+        response = self.client.post(self.api_url, data[0], format='json')
+        response = self.client.post(self.api_url, data[1], format='json')
+        response = self.client.get(self.api_url)
+
+        response.data.sort(key=lambda elem: elem['id'])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        for i in range(len(data)):
+            self.assertEqual(response.data[i]['name'],
+                             data[i]['name'])
+            self.assertEqual(response.data[i]['description'],
+                             data[i]['description'])
+            self.assertEqual(response.data[i]['project'],
+                             data[i]['project'])
 
 class TaskTimeEntryTest(APITestCase):
     def setUp(self):
