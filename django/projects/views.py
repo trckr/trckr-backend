@@ -11,6 +11,9 @@ from .serializers import ProjectSerializer
 
 
 class ProjectView(ListCreateAPIView):
+    """
+    Let's users create and query projects
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
@@ -21,6 +24,9 @@ class ProjectView(ListCreateAPIView):
 
 
 class ProjectDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Let's users query, update and delete single projects
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 

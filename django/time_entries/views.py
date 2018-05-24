@@ -28,6 +28,7 @@ class TimeEntryView(APIView):
         serializer = TimeEntrySerializer(time_entries, many=True)
         return Response(serializer.data)
 
+
 class TimeEntryDetailView(APIView):
     """
     Let's users query and update time entries

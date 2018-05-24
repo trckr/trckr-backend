@@ -10,6 +10,7 @@ from time_entries.models import TimeEntry
 
 from .models import Task
 
+
 class TasksTest(APITestCase):
     def setUp(self):
         self.api_url = reverse('tasks')
@@ -113,9 +114,9 @@ class TasksTest(APITestCase):
         self.assertEqual(response.data['description'], data['description'])
         self.assertEqual(response.data['project'], data['project'])
 
-    def test_update_task_with_no_name(self):
+    def test_update_task_with_empty_name(self):
         """
-        Updates a task
+        Try to update a task with an empty name and expect an error
         """
         data = {
             'name': 'test',
@@ -134,11 +135,17 @@ class TasksTest(APITestCase):
                 )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_get_nonexisting_task(self):
+    def test_get_non_existing_task(self):
+        '''
+        Try to get non-existing task and expect an error
+        '''
         response = self.client.get(self.api_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_task_after_creation(self):
+        '''
+        Create task and retrieve it immediately again
+        '''
         data = {
             'name': 'test',
             'description': 'test description',
@@ -154,6 +161,9 @@ class TasksTest(APITestCase):
         self.assertEqual(response.data['project'], data['project'])
 
     def test_get_tasks_after_creation(self):
+        '''
+        Create multiple tasks and retrieve them immediately again
+        '''
         data = [{
             'name': 'test 1',
             'description': 'test description 1',
@@ -164,8 +174,8 @@ class TasksTest(APITestCase):
             'project' : self.test_project_2.id,
         }]
 
-        response = self.client.post(self.api_url, data[0], format='json')
-        response = self.client.post(self.api_url, data[1], format='json')
+        self.client.post(self.api_url, data[0], format='json')
+        self.client.post(self.api_url, data[1], format='json')
         response = self.client.get(self.api_url)
 
         response.data.sort(key=lambda elem: elem['id'])
@@ -179,10 +189,9 @@ class TasksTest(APITestCase):
             self.assertEqual(response.data[i]['project'],
                              data[i]['project'])
 
+
 class TaskTimeEntryTest(APITestCase):
     def setUp(self):
-        # TODO: find out how to use reverse with
-        # params in the url
         self.test_user = User.objects.create_user(
                 'test',
                 'test@example.com',
@@ -233,11 +242,17 @@ class TaskTimeEntryTest(APITestCase):
         auth = 'Token {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
-    def test_get_time_entries_for_nonexisting_task(self):
+    def test_get_time_entries_for_non_existing_task(self):
+        '''
+        Try to get time entries for non-existing task and expect an error
+        '''
         response = self.client.get("/api/tasks/0/time-entries/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_get_tasks_for_project(self):
+    def test_get_time_entries_for_task(self):
+        '''
+        Get time entries for a specific task
+        '''
         response = self.client.get("/api/tasks/" + str(self.test_task.id)
                                    + "/time-entries/")
 

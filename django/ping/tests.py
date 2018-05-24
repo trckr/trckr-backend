@@ -4,10 +4,8 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 
-# Create your tests here.
 
 class PingTest(APITestCase):
-
     def setUp(self):
         self.api_url = reverse('ping')
         self.test_user = User.objects.create_user(

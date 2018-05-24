@@ -24,12 +24,18 @@ class ProjectTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_projects(self):
+        """
+        Get a list of projects via GET request
+        """
         response = self.client.get(self.api_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
     def test_create_project(self):
+        """
+        Create a project via POST
+        """
         data = {'name': 'test project', 'description': 'test description'}
 
         response = self.client.post(self.api_url, data, format='json')
@@ -41,14 +47,20 @@ class ProjectTest(APITestCase):
         self.assertEqual(response.data['description'], data['description'])
 
     def test_create_project_without_name(self):
+        """
+        Try to create a project without a name and get an error
+        """
         data = {'description': 'test description'}
 
         response = self.client.post(self.api_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_project_with__empty_name(self):
-        data = {'description': 'test description'}
+    def test_create_project_with_empty_name(self):
+        """
+        Try to create a project without a name and get an error
+        """
+        data = {'name' : '', 'description': 'test description'}
 
         response = self.client.post(self.api_url, data, format='json')
 
@@ -67,6 +79,9 @@ class ProjectDetailTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
     def test_get_project(self):
+        '''
+        Get a specific project via GET request
+        '''
         test_project = Project.objects.create(
             name='test project',
             description='This is a test project',
@@ -80,7 +95,10 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(response.data['name'], test_project.name)
 
     def test_update_project(self):
-        data = {'name': 'update project', }
+        '''
+        Update a project via PUT
+        '''
+        data = {'name': 'update project' }
 
         test_project = Project.objects.create(
             name='test project',
@@ -95,6 +113,9 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(project_after_update.name, data['name'])
 
     def test_update_project_with_empty_name(self):
+        '''
+        Try to update a project with an empty name and expect an error
+        '''
         data = {'name': '', }
 
         test_project = Project.objects.create(
@@ -107,6 +128,9 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_project(self):
+        '''
+        Delete a project via DELETE
+        '''
         test_project = Project.objects.create(
             name='test project',
             description='This is a test project',
@@ -119,6 +143,9 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(len(Project.objects.filter(pk=test_project.id)), 0)
 
     def test_delete_non_existing_project(self):
+        '''
+        Try to delete a non-existing project and expect an error
+        '''
         response = self.client.delete(
             self.api_url + '{}/'.format(0), format='json')
 
@@ -127,8 +154,6 @@ class ProjectDetailTest(APITestCase):
 
 class TaskProjectTest(APITestCase):
     def setUp(self):
-        # params in the url
-        # self.api_url = reverse('project-tasks')
         self.test_user = User.objects.create_user('test', 'test@example.com',
                                                   'testpassword')
         self.test_token = Token.objects.create(user=self.test_user)
@@ -161,11 +186,17 @@ class TaskProjectTest(APITestCase):
         auth = 'Token  {0}'.format(self.test_token)
         self.client.credentials(HTTP_AUTHORIZATION=auth)
 
-    def test_get_tasks_for_nonexisting_project(self):
+    def test_get_tasks_for_non_existing_project(self):
+        '''
+        Try to get tasks for non-existing project and expect an error
+        '''
         response = self.client.get("/api/projects/0/tasks/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_tasks_for_project(self):
+        '''
+        Get tasks for a specific project via GET request
+        '''
         response = self.client.get("/api/projects/" + str(self.test_project.id)
                                    + "/tasks/")
 

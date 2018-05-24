@@ -14,6 +14,8 @@ class UserCreate(APIView):
     """
     Creates a new user and returns the auth token on success
     """
+
+    # Allow users without a token to access this view
     permission_classes = (AllowAny, )
 
     def post(self, request, format='json'):
