@@ -179,6 +179,75 @@ class TimeEntryTest(APITestCase):
                          Decimal(data['timeSpent']))
         self.assertEqual(response.data['task'], data['task'])
 
+    def test_update_time_entry_with_negative_time(self):
+        '''
+        Try updating a time entry with negative time and expect an error
+        '''
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : 1.25,
+            'task' : self.test_task.id,
+        }
+
+        self.client.post(self.api_url, data, format='json')
+
+        data['timeSpent'] = -1
+
+        response = self.client.put(
+                self.api_url + str(TimeEntry.objects.latest('id').id) + '/',
+                data,
+                format='json'
+                )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_time_entry_with_zero_time(self):
+        '''
+        Try updating a time entry with 0 time and expect an error
+        '''
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : 1.25,
+            'task' : self.test_task.id,
+        }
+
+        self.client.post(self.api_url, data, format='json')
+
+        data['timeSpent'] = 0
+
+        response = self.client.put(
+                self.api_url + str(TimeEntry.objects.latest('id').id) + '/',
+                data,
+                format='json'
+                )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_time_entry_with_non_existing_task(self):
+        '''
+        Try updating a time entry with a non-existing task and expect an error
+        '''
+        data = {
+            'description': 'test description',
+            'startTime' : '2018-01-01 12:00',
+            'timeSpent' : 1.25,
+            'task' : self.test_task.id,
+        }
+
+        self.client.post(self.api_url, data, format='json')
+
+        data['task'] = 0
+
+        response = self.client.put(
+                self.api_url + str(TimeEntry.objects.latest('id').id) + '/',
+                data,
+                format='json'
+                )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_get_non_existing_time_entry(self):
         '''
         Try to get non-existing time entry and expect and error
